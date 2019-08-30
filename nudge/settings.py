@@ -107,7 +107,7 @@ USE_L10N = True
 USE_TZ = True
 
 GRAPHENE = {
-    'SCHEMA': 'schema.schema',
+    'SCHEMA': 'nudge.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ]
