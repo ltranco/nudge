@@ -1,5 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 from .models import Topic
 
 
@@ -11,6 +12,7 @@ class TopicType(DjangoObjectType):
 class Query(graphene.ObjectType):
     topics = graphene.List(TopicType)
 
+    @login_required
     def resolve_topics(self, info, **kwargs):
         return Topic.objects.all()
 
