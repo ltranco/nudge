@@ -1,1 +1,1 @@
-web: gunicorn midas.wsgi --log-file -
+web: gunicorn nudge.wsgi --log-file -
