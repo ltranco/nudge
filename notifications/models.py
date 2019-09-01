@@ -12,6 +12,7 @@ class Topic(models.Model):
         (QUEUED, 'Queued'),
         (COMPLETED, 'Completed'),
         (CANCELLED, 'Cancelled'),
+        (ACTIVE, 'Active'),
     )
 
     owner = models.ForeignKey(get_user_model(), blank=False, null=False, on_delete=models.CASCADE)
