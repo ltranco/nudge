@@ -11,17 +11,19 @@ class TopicType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    topics = graphene.List(TopicType)
+    topics = graphene.List(TopicType, status=graphene.String())
 
     @login_required
     def resolve_topics(self, info, **kwargs):
         user = info.context.user
+        status = kwargs.get('status', Topic.ACTIVE)
+
         if not user:
             return Topic.objects.none()
         elif user.is_superuser:
-            return Topic.objects.all()
+            return Topic.objects.filter(status=status)
         else:
-            return Topic.objects.filter(owner=user)
+            return Topic.objects.filter(owner=user, status=status)
 
 
 class CreateTopic(graphene.Mutation):
