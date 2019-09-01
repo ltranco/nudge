@@ -2,6 +2,7 @@ const crossFetch = require('cross-fetch/polyfill');
 const ab = require('apollo-boost');
 const ac = require('apollo-client');
 const ApolloClient = ac.default;
+const exec = require('child_process').exec;
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -49,9 +50,29 @@ class TopicFetcher {
                     }
                 `
             }).then(v => {
-               console.log(v['data']);
+                const topic = this.randomlyPickTopic(v['data']['topics']);
+                if(topic) {
+                    this.sendiMessage(this.constructPayload(topic));
+                }
             });
         });
+    }
+
+    constructPayload(topic) {
+        return `"Today's learning:\n${topic['name']}\n\n${topic['url']}"`;
+    }
+
+    randomlyPickTopic(topics) {
+        if(!topics && !topics.isPrototypeOf(Array)) {
+            return null;
+        }
+        return topics[Math.floor(Math.random() * topics.length)];
+    }
+
+    sendiMessage(payload) {
+        const handler = (error, stdOut, stdErr) => {
+        };
+        exec(`osascript ./run.applescript ${process.env.DESTINATION_NUMBER} ${payload}`, handler);
     }
 
     getAuthedLink(token) {
@@ -62,7 +83,6 @@ class TopicFetcher {
             }
         });
     }
-
 }
 
 const fetcher = new TopicFetcher(`${process.env.URL}`);
